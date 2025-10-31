@@ -1,0 +1,93 @@
+/* ===== REGISTER PAGE STYLE ===== */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #38bdf8; /* sama seperti bg-sky-400 di Tailwind */
+}
+
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-box {
+  background-color: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+.register-box h2 {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #222;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s ease-in-out;
+}
+
+.register-form input:focus {
+  border-color: #38bdf8;
+}
+
+.register-form .error {
+  font-size: 13px;
+  color: #e63946;
+  margin-top: -6px;
+}
+
+.register-form button {
+  width: 100%;
+  background-color: #16a34a;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.register-form button:hover {
+  background-color: #15803d;
+}
+
+.register-form button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.msg {
+  text-align: center;
+  color: #16a34a;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+/* optional highlight jika role admin dipilih */
+.register-box.admin {
+  border: 2px solid #f59e0b; /* amber border jika admin */
+}

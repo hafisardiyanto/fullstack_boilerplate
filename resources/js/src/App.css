@@ -1,0 +1,190 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+.fullpage-bg {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* remove extra padding */
+}
+
+/* optional overlay for contrast */
+.fullpage-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 0;
+}
+
+.fullpage-bg > .container {
+  position: relative;
+  z-index: 1; /* place content above overlay */
+}
+
+/* small responsive tweak: reduce top margin on small screens */
+@media (max-width: 576px) {
+  .card { margin: 1rem; }
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+
+/* Mengatur agar body memenuhi layar dan berada di tengah */
+/* App.css (updated) */
+body {
+  background-color: #38bdf8; /* biru laut (sky blue) */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;    /* changed: align to top, we'll move box down with padding */
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  padding-top: 4.5rem;        /* push the box down (adjust value as needed) */
+}
+
+/* Kotak utama login (inner card) */
+.login-box {
+  background: white;
+  width: 360px;               /* slightly smaller width to fit your screenshot */
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Judul login */
+.login-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a; /* dark slate */
+  margin-bottom: 0.75rem;
+}
+
+/* Input */
+.login-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.login-input:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 6px rgba(2,132,199,0.25);
+}
+
+/* Checkbox label smaller spacing */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+/* Tombol login */
+.login-btn {
+  width: 100%;
+  background: #0284c7;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 0.3s;
+  margin-top: 6px;
+}
+
+.login-btn:hover {
+  background: #0369a1;
+}
+
+.small-note {
+  display: block;
+  text-align: center;
+  margin-top: 0.75rem;
+  color: #1d4ed8;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+/* Google button */
+.google-btn {
+  width: 100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 8px;
+  border-radius:6px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  cursor:pointer;
+  margin-top:8px;
+}
+
+.google-btn img {
+  width:20px;
+  height:20px;
+}
+
+/* responsive tweak */
+@media (max-width: 420px) {
+  .login-box { width: 92vw; }
+  body { padding-top: 2.5rem; }
+}
