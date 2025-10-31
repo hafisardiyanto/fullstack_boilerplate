@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../utils/api';
-import './AdminDashboard.css';
+import '../AdminDashboard.css';
 
 export default function AdminDashboard() {
   const [activeMenu, setActiveMenu] = useState('dashboard');
@@ -28,7 +28,9 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       const res = await api.get('/api/admin/users');
+      console.log('GET /api/admin/users response:', res);
       setUsers(res.data.data || res.data);
+      console.log('parsed payload:', payload);
     } catch (e) {
       console.error(e);
     } finally {
