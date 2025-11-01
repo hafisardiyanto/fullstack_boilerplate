@@ -188,3 +188,33 @@ body {
   .login-box { width: 92vw; }
   body { padding-top: 2.5rem; }
 }
+
+.google-login-container {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.google-login-btn {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.google-login-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.google-icon {
+  width: 22px;
+  height: 22px;
+}

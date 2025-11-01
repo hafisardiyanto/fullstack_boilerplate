@@ -35,10 +35,13 @@ export default function Login() {
       setError(err.response?.data?.message || 'Login Gagal');
     } finally { setLoading(false); }
   };
+
   const handleGoogle = () => {
-    // redirect ke backend OAuth
-    window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/auth/google/redirect`;
-  };
+  // baca dari env (sesuaikan VITE_API_URL di .env)
+  const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  // redirect user ke backend yang meng-handle Socialite Google redirect
+  window.location.href = `${API}/auth/google/redirect`;
+};
 
   return (
     <div style={{display:'flex', justifyContent:'center'}}>
@@ -69,19 +72,22 @@ export default function Login() {
               </button>
             </form>
 
-            <div>
-              <button className="google-btn" onClick={handleGoogle} type="button">
-                <img src="/build/assets/google-logo.svg" alt="Google" />
-                <span>Login with Google</span>
-              </button>
-            </div>
-          </div>
+          <div className="google-login-container">
+  <button type="button" className="google-login-btn" onClick={handleGoogle}>
+    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="google-icon"/>
+    <span>Masuk dengan Google</span>
+  </button>
+</div>
+
+
 
           <div className="small-note">
             Belum punya akun? <Link to="/Register" style={{color:'#1d4ed8'}}>Daftar</Link>
           </div>
+
         </div>
       </div>
+    </div>
     </div>
   );
 }
