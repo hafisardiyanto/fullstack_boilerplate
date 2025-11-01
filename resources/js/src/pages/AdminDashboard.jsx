@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import api from '../utils/api';
 import '../AdminDashboard.css';
 
