@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import api from '../utils/api';
 import '../AdminDashboard.css';
-import { AuthContext } from '../contexts/AuthContext'; // sesuaikan path jika perlu
+import { AuthContext } from '../context/AuthContext'; // sesuaikan path jika perlu
 
 export default function AdminDashboard() {
   const { user: authUser, loading: authLoading, isAuthenticated } = useContext(AuthContext);
