@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, { useEffect, useState, useContext } from 'react';
 import api from '../utils/api';
 import '../AdminDashboard.css';
+import { AuthContext } from '../contexts/AuthContext'; // sesuaikan path jika perlu
 
 export default function AdminDashboard() {
+  const { user: authUser, loading: authLoading, isAuthenticated } = useContext(AuthContext);
+
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,38 +27,54 @@ export default function AdminDashboard() {
   // =====================
   // FETCH USERS
   // =====================
-  // =====================
-// FETCH USERS
-// =====================
-const fetchUsers = async () => {
-  setLoading(true);
-  try {
-    const res = await api.get('/api/admin/users');
-    // lihat bentuk data yang dikembalikan backend
-    console.log('GET /api/admin/users response.data =', res.data);
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      // optional: ensure token header exists (in case AuthProvider belum set)
+      const token = localStorage.getItem('token');
+      if (token && !api.defaults.headers.common['Authorization']) {
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      }
 
-    // Jika backend pakai paginate -> data berada di res.data.data (array)
-    // Jika backend langsung return array -> res.data adalah array
-    const usersArray = Array.isArray(res.data.data)
-      ? res.data.data
-      : Array.isArray(res.data)
-        ? res.data
-        : [];
+      const res = await api.get('/api/admin/users');
+      console.log('GET /api/admin/users response.data =', res.data);
 
-    setUsers(usersArray);
-  } catch (e) {
-    console.error('fetchUsers error:', e);
-    // optional: tampilkan pesan singkat ke user
-    // alert(e.response?.data?.message || 'Gagal memuat data user');
-  } finally {
-    setLoading(false);
-  }
-};
+      // support laravel paginate (res.data.data) or direct array (res.data)
+      const usersArray = Array.isArray(res.data.data)
+        ? res.data.data
+        : Array.isArray(res.data)
+          ? res.data
+          : [];
 
+      setUsers(usersArray);
+    } catch (e) {
+      console.error('fetchUsers error:', e.response?.status, e.response?.data || e.message);
+      // jika 401 => kemungkinan token expired / tidak ada
+      if (e.response?.status === 401) {
+        // optional: redirect ke login atau tampilkan pesan
+        console.warn('Unauthorized. Pastikan token valid / user admin.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // only fetch after auth is restored and user is admin
   useEffect(() => {
+    if (authLoading) return; // tunggu sampai auth selesai
+    if (!isAuthenticated) {
+      setUsers([]);
+      return;
+    }
+    // jika perlu batasi hanya untuk role admin
+    if (authUser?.role && authUser.role !== 'admin') {
+      console.warn('User bukan admin — tidak mengambil daftar user.');
+      setUsers([]);
+      return;
+    }
     fetchUsers();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, isAuthenticated, authUser?.role]);
 
   // =====================
   // HANDLE FORM
@@ -118,6 +136,7 @@ const fetchUsers = async () => {
       setShowForm(false);
       setSelectedUser(null);
     } catch (err) {
+      console.error('submitForm error', err);
       setErrors(err.response?.data?.errors || {});
     }
   };
@@ -132,6 +151,7 @@ const fetchUsers = async () => {
       await api.delete(`/api/admin/users/${u.id}`);
       fetchUsers();
     } catch (e) {
+      console.error('deleteUser error', e);
       alert(e.response?.data?.message || 'Gagal hapus');
     }
   };
