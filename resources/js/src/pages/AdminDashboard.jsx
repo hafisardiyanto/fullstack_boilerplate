@@ -24,19 +24,34 @@ export default function AdminDashboard() {
   // =====================
   // FETCH USERS
   // =====================
-  const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get('/api/admin/users');
-      console.log('GET /api/admin/users response:', res);
-      setUsers(res.data.data || res.data);
-      console.log('parsed payload:', payload);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // =====================
+// FETCH USERS
+// =====================
+const fetchUsers = async () => {
+  setLoading(true);
+  try {
+    const res = await api.get('/api/admin/users');
+    // lihat bentuk data yang dikembalikan backend
+    console.log('GET /api/admin/users response.data =', res.data);
+
+    // Jika backend pakai paginate -> data berada di res.data.data (array)
+    // Jika backend langsung return array -> res.data adalah array
+    const usersArray = Array.isArray(res.data.data)
+      ? res.data.data
+      : Array.isArray(res.data)
+        ? res.data
+        : [];
+
+    setUsers(usersArray);
+  } catch (e) {
+    console.error('fetchUsers error:', e);
+    // optional: tampilkan pesan singkat ke user
+    // alert(e.response?.data?.message || 'Gagal memuat data user');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchUsers();
