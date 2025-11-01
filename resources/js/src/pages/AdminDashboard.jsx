@@ -27,37 +27,45 @@ export default function AdminDashboard() {
   // =====================
   // FETCH USERS
   // =====================
-  const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      // optional: ensure token header exists (in case AuthProvider belum set)
-      const token = localStorage.getItem('token');
-      if (token && !api.defaults.headers.common['Authorization']) {
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      }
-
-      const res = await api.get('/api/admin/users');
-      console.log('GET /api/admin/users response.data =', res.data);
-
-      // support laravel paginate (res.data.data) or direct array (res.data)
-      const usersArray = Array.isArray(res.data.data)
-        ? res.data.data
-        : Array.isArray(res.data)
-          ? res.data
-          : [];
-
-      setUsers(usersArray);
-    } catch (e) {
-      console.error('fetchUsers error:', e.response?.status, e.response?.data || e.message);
-      // jika 401 => kemungkinan token expired / tidak ada
-      if (e.response?.status === 401) {
-        // optional: redirect ke login atau tampilkan pesan
-        console.warn('Unauthorized. Pastikan token valid / user admin.');
-      }
-    } finally {
-      setLoading(false);
+  // debug fetchUsers
+const fetchUsers = async () => {
+  setLoading(true);
+  try {
+    // ensure token header if token-based
+    const token = localStorage.getItem('token');
+    if (token && !api.defaults.headers.common['Authorization']) {
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      console.log('Auth header set from localStorage token');
     }
-  };
+
+    const res = await api.get('/api/admin/users');
+    console.log('GET /api/admin/users full response:', res);
+
+    // robust extraction
+    let list = [];
+    if (Array.isArray(res.data)) list = res.data;
+    else if (Array.isArray(res.data.data)) list = res.data.data;
+    else if (Array.isArray(res.data.items)) list = res.data.items;
+    else {
+      const maybe = res.data?.data ?? res.data;
+      if (Array.isArray(maybe)) list = maybe;
+    }
+    console.log('resolved users list:', list);
+    setUsers(list);
+  } catch (e) {
+    console.error('fetchUsers error', e);
+    if (e.response) {
+      console.error('status', e.response.status);
+      console.error('response.data', e.response.data);
+      alert(`fetchUsers error ${e.response.status}: ${JSON.stringify(e.response.data)}`);
+    } else {
+      alert('fetchUsers error: ' + e.message);
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // only fetch after auth is restored and user is admin
   useEffect(() => {
@@ -109,37 +117,47 @@ export default function AdminDashboard() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const submitForm = async (e) => {
-    e.preventDefault();
-    setErrors({});
+  // debug submitForm
+const submitForm = async (e) => {
+  e.preventDefault();
+  setErrors({});
 
-    try {
-      if (selectedUser) {
-        // UPDATE USER
-        const payload = {
-          name: form.name,
-          phone: form.phone,
-          role: form.role,
-        };
-        if (form.password) {
-          payload.password = form.password;
-          payload.password_confirmation = form.password_confirmation;
-        }
-
-        await api.put(`/api/admin/users/${selectedUser.id}`, payload);
-      } else {
-        // CREATE NEW USER
-        await api.post('/api/admin/users', form);
-      }
-
-      fetchUsers();
-      setShowForm(false);
-      setSelectedUser(null);
-    } catch (err) {
-      console.error('submitForm error', err);
-      setErrors(err.response?.data?.errors || {});
+  try {
+    // make sure auth header present
+    const token = localStorage.getItem('token');
+    if (token && !api.defaults.headers.common['Authorization']) {
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
-  };
+
+    if (selectedUser) {
+      // UPDATE
+      const payload = { name: form.name, phone: form.phone, role: form.role };
+      if (form.password) { payload.password = form.password; payload.password_confirmation = form.password_confirmation; }
+      console.log('PUT payload', payload);
+      const res = await api.put(`/api/admin/users/${selectedUser.id}`, payload);
+      console.log('PUT response', res);
+    } else {
+      // CREATE
+      console.log('POST payload', form);
+      const res = await api.post('/api/admin/users', form);
+      console.log('POST response', res);
+    }
+
+    fetchUsers();
+    setShowForm(false);
+    setSelectedUser(null);
+  } catch (err) {
+    console.error('submitForm error', err);
+    if (err.response) {
+      console.error('status', err.response.status, 'data', err.response.data);
+      setErrors(err.response.data.errors || {});
+      alert(`Error ${err.response.status}: ${err.response.data?.message || JSON.stringify(err.response.data)}`);
+    } else {
+      alert('Error: ' + err.message);
+    }
+  }
+};
+
 
   // =====================
   // DELETE USER
