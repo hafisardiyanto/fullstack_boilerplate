@@ -6,35 +6,45 @@ export default function OauthCallback() {
   const nav = useNavigate();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
-    const role = params.get('role');
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token');
+      const role = params.get('role');
 
-    if (!token) {
-      nav('/login');
-      return;
-    }
-
-    // Simpan token dan set axios default header
-    localStorage.setItem('token', token);
-    if (role) localStorage.setItem('role', role);
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-    // optionally: call backend to fetch user profile and then redirect
-    api.get('/api/user')
-      .then(res => {
-        // if you use AuthContext, you may want to set context user here,
-        // or simply redirect and AuthProvider will pick up token on mount.
-        const u = res.data?.data ?? res.data;
-        // optional: navigate according to role
-        if (u?.role === 'admin') nav('/admin');
-        else nav('/dashboard');
-      })
-      .catch(err => {
-        console.error('oauth fetch user error', err);
+      if (!token) {
         nav('/login');
-      });
+        return;
+      }
+
+      try {
+        // Simpan token & role
+        localStorage.setItem('token', token);
+        if (role) localStorage.setItem('role', role);
+
+        // set axios header supaya fetchUser bisa langsung memakai
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        // optional: fetch user here or let AuthProvider do it
+        // const res = await api.get('/api/user');
+
+        // notify AuthProvider to re-fetch user
+        window.dispatchEvent(new Event('auth:login'));
+
+        // bersihkan URL (hapus token dari address bar)
+        if (window.history && window.history.replaceState) {
+          const cleanUrl = window.location.origin + window.location.pathname;
+          window.history.replaceState({}, document.title, cleanUrl);
+        }
+
+        // redirect to suitable page (AuthProvider will fetch user)
+        // you may decide to redirect to '/' and let App decide
+        nav('/');
+      } catch (err) {
+        console.error('OauthCallback error', err);
+        nav('/login');
+      }
+    })();
   }, []);
 
-  return <div>Processing Google login...</div>;
+  return <div>Processing OAuth login... please wait.</div>;
 }

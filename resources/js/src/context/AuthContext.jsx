@@ -9,6 +9,7 @@ export function AuthProvider({ children }) {
 
   // Restore auth from token
   const fetchUser = async () => {
+    
     try {
       const token = localStorage.getItem('token');
 

@@ -1,16 +1,17 @@
-import React from 'react';  
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from '../pages/login';
-import Home from '../pages/Home';
+import Login from './pages/Login';
+import Home from './pages/Home';
 import Register from './pages/Register';
-import ForgotPassword from '../pages/ForgotPassword';
-import ResetPassword from '../pages/ResetPassword';
-import PrivateRoute from '../pages/PrivateRoute';  
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import PrivateRoute from './pages/PrivateRoute';
+import OauthCallback from './pages/OauthCallback';
 
-import { AuthProvider } from '../context/AuthContext';
-import ProtectedRoute from '../components/ProtectedRoute';
-import AdminDashboard from '../pages/AdminDashboard';
-import UserDashboard from '../pages/UserDashboard';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminDashboard from './pages/AdminDashboard';
+import UserDashboard from './pages/UserDashboard';
 
 export default function App() {
   return (
@@ -56,7 +57,7 @@ export default function App() {
           {/* Default redirect */}
           <Route path="*" element={<Login />} />
         
-          <Route path="/auth/oauth-success" element={<OauthCallback />} />
+         <Route path="/auth/oauth-success" element={<OauthCallback />} />
 
         </Routes>
       </BrowserRouter>
