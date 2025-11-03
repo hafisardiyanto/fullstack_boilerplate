@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
+import Login from '../pages/Login';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import PrivateRoute from './pages/PrivateRoute';
+import PrivateRoute from './pages/PrivateRoute';  
 
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -56,6 +56,7 @@ export default function App() {
           {/* Default redirect */}
           <Route path="*" element={<Login />} />
         
+          <Route path="/auth/oauth-success" element={<OauthCallback />} />
 
         </Routes>
       </BrowserRouter>
