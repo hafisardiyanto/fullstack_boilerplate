@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import '../AdminDashboard.css';
 import { AuthContext } from '../context/AuthContext'; // sesuaikan path jika perlu
@@ -9,9 +10,29 @@ export default function AdminDashboard() {
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
 
   const [showForm, setShowForm] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  const handleLogout = async (e) => {
+    // jika tombol dalam form, mencegah submit:
+    if (e && e.preventDefault) e.preventDefault();
+
+    try {
+      // tunggu logout membersihkan token & state
+      await logout();
+      // lalu ke halaman login
+      navigate('/login');
+    } catch (err) {
+      console.error('Logout failed:', err);
+      // tetap coba membersihkan dan redirect
+      try { await logout(); } catch (_) {}
+      navigate('/login');
+    }
+  };
 
   const [form, setForm] = useState({
     name: '',
@@ -65,6 +86,7 @@ const fetchUsers = async () => {
     setLoading(false);
   }
 };
+
 
 
   // only fetch after auth is restored and user is admin
@@ -174,7 +196,10 @@ const submitForm = async (e) => {
     }
   };
 
-  return (
+ 
+
+
+  return (                                                                                                                                                                                                                                                                                    
     <div className="admin-root">
       {/* ========== SIDEBAR ========== */}
       <aside className="sidebar">
@@ -185,6 +210,8 @@ const submitForm = async (e) => {
           onClick={() => setActiveMenu('dashboard')}
         >
           Dashboard
+
+   
         </button>
 
         <div className="sb-dropdown">
@@ -194,6 +221,9 @@ const submitForm = async (e) => {
           >
             Settings ▾
           </button>
+
+
+
 
           {activeMenu === 'settings' && (
             <div className="sb-sub">
@@ -206,9 +236,15 @@ const submitForm = async (e) => {
             </div>
           )}
         </div>
+
+        <button className="sb-item logout" // Tambahkan class 'logout' untuk styling
+ onClick={handleLogout}
+ style={{ marginTop: '20px', backgroundColor: '#f44336', color: 'white' }} // Contoh styling inline >
+>🚪 Logout
+ </button>
       </aside>
 
-      {/* ========== MAIN ========== */}
+      
       <main className="main">
         {activeMenu === 'dashboard' && (
           <div className="box">

@@ -5,15 +5,13 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Htpp\Controllers\Auth\OAuthController;
+
 
 
 //Login
 Route::post('/login', [LoginController::class, 'login']);
 
-//OAuth Google
-Route::get('/auth/google/redirect', [OAuthController::class, 'redirectToGoogle']);
-Route::get('/auth/google/callback', [OAuthController::class, 'handleGoogleCallback']);
+
 
 //Register
 Route::post('/register', [RegisterController::class, 'register']);
