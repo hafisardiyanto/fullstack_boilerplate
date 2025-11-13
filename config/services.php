@@ -31,10 +31,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    
+    // Google (SUDAH DIPERBAIKI)
     'google' => [
-    'client_id' => env('1094621295557-3od0p2d3658lakg2iqgktc3h9kk248th.apps.googleusercontent.com'),
-    'client_secret' => env('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'),
-    'redirect' => env('http://localhost:8000/auth/google/callback'),
-],
+        // MEMANGGIL NAMA KUNCI DARI FILE .env, BUKAN NILAI LANGSUNG
+        'client_id' => env('GOOGLE_CLIENT_ID'), 
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'), 
+        'redirect' => env('GOOGLE_REDIRECT_URL'), 
+    ],
 
 ];

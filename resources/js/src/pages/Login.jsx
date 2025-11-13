@@ -15,7 +15,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
@@ -37,10 +36,8 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-  // baca dari env (sesuaikan VITE_API_URL di .env)
-  const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-  // redirect user ke backend yang meng-handle Socialite Google redirect
-  window.location.href = `${API}/auth/google/redirect`;
+ const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+ window.location.href = `${API}/auth/google/redirect`;
 };
 
   return (

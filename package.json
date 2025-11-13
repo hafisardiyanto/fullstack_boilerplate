@@ -1,18 +1,18 @@
 {
-    "private": true,
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build"
-    },
-    "devDependencies": {
-        "@vitejs/plugin-react": "^5.0.4",
-        "axios": "^1.1.2",
-        "laravel-vite-plugin": "^0.7.2",
-        "vite": "^4.5.14"
-    },
-    "dependencies": {
-        "react": "^19.2.0",
-        "react-dom": "^19.2.0",
-        "react-router-dom": "^7.9.4"
-    }
+  "name": "fullstack-boilerplate",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build:frontend": "vite build --config vite.frontend.config.js"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.1",
+    "vite": "^7.2.2"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.5"
+  }
 }
