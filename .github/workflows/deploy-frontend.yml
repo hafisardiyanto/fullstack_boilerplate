@@ -1,0 +1,37 @@
+name: Deploy Frontend (my_app) to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]    # deploy setiap push ke main (ubah sesuai branchmu)
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Install dependencies (my_app)
+      run: npm ci
+      working-directory: ./my_app
+
+    - name: Build (my_app)
+      env:
+        VITE_API_URL: ${{ secrets.VITE_API_URL }}   # optional: gunakan ini untuk mengganti API URL saat build
+      run: npm run build
+      working-directory: ./my_app
+
+    - name: Deploy to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./my_app/dist
+        # optional: user name & email for commit
+        # committer_name: github-actions
+        # committer_email: actions@github.com
